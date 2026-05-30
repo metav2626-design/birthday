@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật Xịn Sò</title>
+    <style>
+        body { 
+            background-color: #1a1a2e; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow: hidden; 
+            perspective: 1000px;
+        }
+        
+        /* Hiệu ứng bong bóng xịn sò bay lên */
+        .bubble { 
+            position: absolute; 
+            bottom: -50px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 105, 180, 0.1)); 
+            border-radius: 50%; 
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            animation: floatUp 6s linear infinite; 
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-50vh) translateX(30px) rotate(180deg); }
+            100% { transform: translateY(-110vh) translateX(-20px) rotate(360deg); opacity: 0; }
+        }
+
+        #instruction { 
+            font-size: 1.3rem; 
+            text-align: center; 
+            padding: 0 20px; 
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* Nút bắt đầu để kích hoạt hệ thống */
+        #start-btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        #start-btn:active { transform: scale(0.95); }
+
+        /* Chữ Happy Birthday xuất hiện hoành tráng */
+        #wish-text { 
+            font-size: 2.5rem; 
+            color: #f1c40f; 
+            font-weight: bold;
+            text-align: center; 
+            position: absolute;
+            top: 15%;
+            text-shadow: 0 0 10px #f39c12, 0 0 20px #f1c40f, 0 0 30px #fff; 
+            opacity: 0;
+            transform: scale(0.3) translateY(-50px);
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            line-height: 1.4;
+        }
+
+        #wish-text.show { 
+            opacity: 1; 
+            transform: scale(1) translateY(0);
+        }
+
+        /* Khung chứa bánh kem 3 tầng */
+        .cake-container {
+            position: relative;
+            margin-top: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Tầng 1 (Dưới cùng) */
+        .layer1 { 
+            width: 200px; height: 70px; 
+            background: linear-gradient(to right, #ff7675, #ff7675, #ff6b6b); 
+            border-radius: 15px 15px 5px 5px; 
+            position: relative; z-index: 3; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+        .layer1::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 20px;
+            background: #fff; border-radius: 15px 15px 10px 10px;
+        }
+
+        /* Tầng 2 (Giữa) */
+        .layer2 { 
+            width: 150px; height: 55px; 
+            background: linear-gradient(to right, #fdcb6e, #ffeaa7); 
+            border-radius: 12px 12px 5px 5px; 
+            position: absolute; top: -45px; left: 25px; z-index: 2; 
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .layer2::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 15px;
+            background: #6c5ce7; border-radius: 12px 12px 8px 8px;
+        }
+
+        /* Tầng 3 (Trên cùng) */
+        .layer3 { 
+            width: 100px; height: 45px; 
+            background: linear-gradient(to right, #55efc4, #81ecec); 
+            border-radius: 10px 10px 5px 5px; 
+            position: absolute; top: -80px; left: 50px; z-index: 1; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .layer3::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 12px;
+            background: #e84393; border-radius: 10px 10px 6px 6px;
+        }
+        
+        /* Cây nến */
+        .candle { 
+            width: 10px; height: 35px; 
+            background: linear-gradient(to right, #bdc3c7, #fff); 
+            position: absolute; top: -110px; left: 95px; 
+            border-radius: 4px; z-index: 0; 
+        }
+
+        /* Ngọn lửa lung linh */
+        .flame { 
+            width: 14px; height: 20px; 
+            background: radial-gradient(circle at 50% 100%, #ffea00, #ff7675); 
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; 
+            position: absolute; top: -18px; left: -2px; 
+            box-shadow: 0 0 15px #ff7675, 0 0 25px #ffea00; 
+            animation: flicker 0.15s infinite alternate; 
+            transition: opacity 0.4s ease-out;
+        }
+        @keyframes flicker { 
+            0% { transform: scale(1) rotate(-1deg); } 
+            100% { transform: scale(1.15) rotate(1deg); } 
+        }
+
+        .flame.extinguished { 
+            opacity: 0; 
+            animation: none; 
+        }
+
+        /* Dâu tây trang trí */
+        .berry {
+            width: 14px; height: 16px; background: #d63031;
+            border-radius: 50% 50% 20% 20%; position: absolute; z-index: 5;
+        }
+        .b1 { top: -8px; left: 10px; }
+        .b2 { top: -8px; right: 10px; }
+        .b3 { top: -48px; left: 35px; }
+        .b4 { top: -48px; right: 35px; }
+    </style>
+</head>
+<body>
+
+    <h2 id="instruction">Bấm nút bên dưới để chuẩn bị thổi nến nhé!</h2>
+    <button id="start-btn" onclick="initAudio()">Bắt đầu</button>
+
+    <div id="wish-text">✨ HAPPY BIRTHDAY! ✨<br>❤️ Wish all the best for You ❤️</div>
+
+    <div class="cake-container">
+        <!-- Nến và Lửa -->
+        <div class="candle"><div class="flame" id="flame"></div></div>
+        
+        <!-- Bánh 3 tầng -->
+        <div class="layer3"></div>
+        <div class="layer2"></div>
+        <div class="layer1"></div>
+        
+        <!-- Dâu tây decor -->
+        <div class="berry b1"></div>
+        <div class="berry b2"></div>
+        <div class="berry b3"></div>
+        <div class="berry b4"></div>
+    </div>
+
+    <script>
+        // Tự tạo hiệu ứng bong bóng nền bay liên tục
+        function createBubbles() {
+            for (let i = 0; i < 25; i++) {
+                let bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                let size = Math.random() * 25 + 15;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * 100 + 'vw';
+                bubble.style.animationDelay = Math.random() * 6 + 's';
+                bubble.style.animationDuration = Math.random() * 4 + 4 + 's';
+                document.body.appendChild(bubble);
+            }
+        }
+        createBubbles();
+
+        // Tích hợp tính năng phụ: Chạm tay trực tiếp vào bánh cũng tắt nến
+        document.querySelector('.cake-container').addEventListener('click', extinguishCandle);
+
+        // Xử lý Audio Micro để thổi
+        async function initAudio() {
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('instruction').innerText = 'Ghé sát Mic THỔI PHÙ thật mạnh! (Hoặc chạm vào bánh)';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaStreamSource(stream);
+                
+                source.connect(analyser);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                function checkBlow() {
+                    analyser.getByteFrequencyData(dataArray);
+                    let sum = 0;
+                    for (let i = 0; i < bufferLength; i++) {
+                        sum += dataArray[i];
+                    }
+                    let average = sum / bufferLength;
+
+                    // Ngưỡng 35 cực kỳ nhạy cho các loại micro điện thoại
+                    if (average > 35) {
+                        extinguishCandle();
+                    } else {
+                        requestAnimationFrame(checkBlow);
+                    }
+                }
+                checkBlow();
+
+            } catch (err) {
+                console.log('Không mở được mic hoặc bị chặn quyền, chuyển sang chế độ chạm.');
+            }
+        }
+
+        // Hàm xử lý khi nến tắt
+        function extinguishCandle() {
+            document.getElementById('flame').classList.add('extinguished');
+            document.getElementById('instruction').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('wish-text').classList.add('show');
+                
+                // Khi nến tắt, bong bóng đổi màu vàng kim và tăng tốc bay lên ăn mừng
+                let bubbles = document.querySelectorAll('.bubble');
+                bubbles.forEach(b => {
+                    b.style.background = 'radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.6), rgba(212, 175, 55, 0.2))';
+                    b.style.animationDuration = '2.5s';
+                });
+            }, 300);
+        }
+    </script>
+</body>
+</html>
